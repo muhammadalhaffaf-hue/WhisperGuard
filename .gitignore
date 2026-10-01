@@ -1,0 +1,25 @@
+# --- RAHASIA: jangan pernah di-commit ---
+mcp.json
+.bob/
+.env
+*.env
+.env.*
+!.env.example
+secrets/
+private/
+
+# --- Hasil ekspor flow yang menyertakan API key ---
+*with_keys*.json
+*_keys.json
+
+# --- Python ---
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# --- Langflow lokal & lain-lain ---
+langflow.db
+*.sqlite
+*.log
+.DS_Store
