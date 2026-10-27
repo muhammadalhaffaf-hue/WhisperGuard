@@ -28,12 +28,19 @@ tool 2: record_audit_findings              (Google Sheets + Google Docs + Gmail 
 
 | Berkas / Folder | Fungsi |
 |---|---|
-| `auditor.py` | Mesin aturan (lapisan 1) dan skor risiko |
-| `hybrid.py` | Lapisan LLM dan penggabungan skor (hanya naik) |
-| `whisperguard_component_v2.py` | Custom Component Langflow (berkas mandiri; dihasilkan `build_component.py`) |
-| `build_component.py` | Script builder komponen |
-| `component_part.py` | Sumber kode kelas komponen Langflow |
-| `eval.py`, `eval_v2.py`, `test_hybrid.py` | Set uji dan tes properti keamanan |
+| `auditor.py` | Sumber: mesin aturan (lapisan 1) dan skor risiko |
+| `hybrid.py` | Sumber: lapisan LLM, penggabungan skor (hanya naik), jejak eksekusi |
+| `component_part.py` | Sumber: kelas komponen Langflow |
+| `build_component.py` | Merangkai tiga sumber di atas menjadi berkas komponen |
+| `whisperguard_component_v2_2.py` | Custom Component Langflow (hasil build, jangan diedit langsung) |
+| `whisperguard_component_v2_1.py` | Versi sebelumnya, acuan uji regresi |
+| `test_sync.py` | Gagal jika komponen, `auditor.py`, dan `hybrid.py` tidak sinkron |
+| `component_harness.py` | Menjalankan komponen tanpa Langflow (untuk tes) |
+| `eval.py`, `eval_v2.py`, `test_hybrid.py`, `test_component.py` | Set uji dan tes properti keamanan |
+| `eval/holdout_v3/`, `lock_holdout.py` | Holdout baru + kunci SHA-256 (evaluasi menolak jalan jika isi berubah) |
+| `eval_v3.py` | Evaluasi pada flow Langflow sungguhan, N run per kasus, tiga mode (aturan/LLM/hybrid); `--dry-run` tanpa jaringan |
+| `test_sanitization.py` | Output audit bebas karakter tak terlihat, tanpa `<` `>` aktif, terpotong sesuai batas |
+| `test_eval_v3.py` | Tes penguncian holdout dan skrip evaluasi |
 | `flows/` | Ekspor flow Langflow **tanpa API key** |
 | `test/llm_prompt.md` | Prompt lapisan LLM dan catatan desain |
 | `test/kasus_uji_*.md` | Kasus uji untuk Playground Langflow & Tahap 2 |
@@ -44,7 +51,7 @@ tool 2: record_audit_findings              (Google Sheets + Google Docs + Gmail 
 .
 ├── auditor.py                     # Logika audit deterministik (Lapisan 1)
 ├── hybrid.py                      # Integrasi Lapisan 1 + Lapisan 2 (LLM)
-├── whisperguard_component_v2.py   # Custom Component Langflow
+├── whisperguard_component_v2_2.py # Custom Component Langflow (hasil build)
 ├── build_component.py             # Script builder komponen
 ├── component_part.py              # Sumber kode kelas komponen
 ├── flows/                         # File ekspor flow Langflow (.json)

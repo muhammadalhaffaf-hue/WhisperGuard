@@ -1,0 +1,40 @@
+# Tema WhisperGuard Console: "lembar hasil lab". Warna dan font sumbernya DESIGN.md.
+[server]
+enableStaticServing = true
+
+[theme]
+base = "light"
+primaryColor = "#0f6e74"
+backgroundColor = "#eef1f2"
+secondaryBackgroundColor = "#e3e9eb"
+textColor = "#20262d"
+linkColor = "#0f6e74"
+borderColor = "#cfd6da"
+showWidgetBorder = true
+baseRadius = "4px"
+font = "Public Sans"
+codeFont = "Roboto Mono"
+codeBackgroundColor = "#f5f7f8"
+dataframeHeaderBackgroundColor = "#f5f7f8"
+# Warna alert dan status, dari palet lembar
+blueColor = "#0f6e74"
+greenColor = "#1f7a4d"
+yellowColor = "#9a6412"
+orangeColor = "#9a6412"
+redColor = "#b42318"
+
+[[theme.fontFaces]]
+family = "Public Sans"
+url = "app/static/fonts/public-sans.woff2"
+weight = "100 900"
+style = "normal"
+
+[[theme.fontFaces]]
+family = "Roboto Mono"
+url = "app/static/fonts/roboto-mono.woff2"
+weight = "100 700"
+style = "normal"
+
+[theme.sidebar]
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#eef1f2"

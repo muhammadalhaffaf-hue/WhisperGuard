@@ -5,6 +5,9 @@ mcp.json
 *.env
 .env.*
 !.env.example
+console_data.db
+*.db
+.streamlit/secrets.toml
 secrets/
 private/
 
@@ -23,3 +26,12 @@ langflow.db
 *.sqlite
 *.log
 .DS_Store
+
+# --- Konfigurasi alat AI/editor lokal (path pribadi, state sesi, screenshot) ---
+.cursor/
+.gemini/
+.impeccable/
+.claude/
+
+# --- Salinan komponen lama, tidak dipakai lagi ---
+component_installed.py
