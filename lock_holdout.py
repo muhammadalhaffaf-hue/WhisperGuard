@@ -11,7 +11,7 @@ Aturan main holdout:
 - eval_v3.py menolak jalan jika isi holdout tidak cocok dengan hash di HOLDOUT_LOCK.txt.
 
 Format holdout.jsonl: satu objek JSON per baris dengan kolom
-  id (unik), source (penguji | tim | publik), label (malicious | clean), tool_name, description.
+  id (unik), source (penguji | tim | publik | sintetis-llm), label (malicious | clean), tool_name, description.
 """
 import argparse
 import datetime
@@ -23,7 +23,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_HOLDOUT = os.path.join(HERE, "eval", "holdout_v3", "holdout.jsonl")
 LOCK_NAME = "HOLDOUT_LOCK.txt"
-SOURCES = ("penguji", "tim", "publik")
+SOURCES = ("penguji", "tim", "publik", "sintetis-llm")
 LABELS = ("malicious", "clean")
 REQUIRED = ("id", "source", "label", "tool_name", "description")
 

@@ -28,7 +28,7 @@ except Exception:
     pass
 
 import build_component
-from lock_holdout import DEFAULT_HOLDOUT, HoldoutError, load_locked_holdout, sha256_file
+from lock_holdout import DEFAULT_HOLDOUT, SOURCES, HoldoutError, load_locked_holdout, sha256_file
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 RESULTS_DIR = os.path.join(HERE, "eval", "results")
@@ -201,8 +201,17 @@ def summarize(records, runs):
     ok = [r for r in records if r["ok"]]
     total = [r["total_ms"] for r in ok if r["total_ms"] is not None]
     rt = [r["roundtrip_ms"] for r in ok]
+    by_source = {}
+    for src in [s for s in SOURCES if any(r["source"] == s for r in records)]:
+        rows = [r for r in records if r["source"] == src]
+        by_source[src] = {
+            "n_malicious": len({r["id"] for r in rows if r["label"] == "malicious"}),
+            "n_clean": len({r["id"] for r in rows if r["label"] == "clean"}),
+            "modes": {m: mode_metrics(rows, m, runs) for m in MODES},
+        }
     return {
         "modes": {m: mode_metrics(records, m, runs) for m in MODES},
+        "by_source": by_source,
         "timing_ms": {
             "total_ms": {"n": len(total), "median": pct(total, 50), "p90": pct(total, 90)},
             "roundtrip_ms": {"n": len(rt), "median": pct(rt, 50), "p90": pct(rt, 90)},
@@ -257,6 +266,19 @@ def render_markdown(meta, summary, limitations):
                      f"| {_range(th['per_run'], 'fpr')} | {len(th['unstable_cases'])} | {mm['n_runs_used']} |")
         L.append("")
 
+    L += ["## Hasil per sumber", "",
+          "Setiap sumber dihitung terpisah. Recall '-' = sumber itu tidak punya kasus malicious; "
+          "FPR '-' = tidak punya kasus clean.", "",
+          "| Sumber | Kasus (malicious/clean) | Mode | Recall >= 20 | FPR >= 20 | Recall >= 50 | FPR >= 50 | Run dipakai |",
+          "|---|---|---|---|---|---|---|---|"]
+    for src, bs in summary["by_source"].items():
+        for m in MODES:
+            mm = bs["modes"][m]
+            t20, t50 = mm["thresholds"]["20"], mm["thresholds"]["50"]
+            L.append(f"| {src} | {bs['n_malicious']}/{bs['n_clean']} | {m} | {_fmt(t20['recall'])} | {_fmt(t20['fpr'])} "
+                     f"| {_fmt(t50['recall'])} | {_fmt(t50['fpr'])} | {mm['n_runs_used']} |")
+    L.append("")
+
     L += ["## Distribusi skor kasus bersih", "",
           "| Mode | n | min | median | p90 | maks | 0 | 1-19 | 20-49 | 50-100 |", "|---|---|---|---|---|---|---|---|---|---|"]
     for m in MODES:
@@ -308,6 +330,9 @@ def limitations_for(meta, summary, runs_log_warning):
         "Yang diaudit hanya nama dan deskripsi tool. Serangan lewat inputSchema, nilai default, atau output tool "
         "tidak tercakup.",
     ]
+    if "sintetis-llm" in summary["by_source"]:
+        out.append("Kasus sintetis-llm dibuat dengan bantuan LLM, bukan oleh pengguna nyata (model dan riwayat revisi: "
+                   "eval/holdout_v3/README.md). Hasil sumber ini tidak mewakili serangan dari penyerang sungguhan.")
     missing = [s for s in ("penguji", "publik") if f"{s} 0" in meta["sources"]]
     if missing:
         out.append(f"Belum ada kasus dari sumber: {', '.join(missing)}. Tanpa data independen, angka ini belum "
@@ -395,7 +420,7 @@ def main(argv=None):
         "holdout_file": os.path.relpath(args.holdout, HERE).replace(os.sep, "/"),
         "holdout_sha256": lock["sha256"], "locked_at_utc": lock.get("locked_at_utc", "?"),
         "n_cases": len(cases), "labels": count("label", ("malicious", "clean")),
-        "sources": count("source", ("penguji", "tim", "publik")),
+        "sources": count("source", SOURCES),
         "runs": args.runs, "delay_s": delay, "retries": args.retries, "model_name": model,
         "component_file": comp_file, "component_sha256": comp_sha,
     }

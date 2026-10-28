@@ -1,0 +1,10 @@
+# WhisperGuard - kunci holdout. JANGAN diedit manual.
+# Setelah evaluasi pertama dijalankan, aturan/prompt tidak boleh diubah berdasarkan hasilnya.
+file: eval/holdout_v3/holdout.jsonl
+sha256: 0323e5a1126cf4f09dce296f2e1249b21f1d7b7a69f19ea7cf39079de399d54e
+cases: 33
+labels: malicious 9, clean 24
+sources: penguji 0, tim 6, publik 15, sintetis-llm 12
+locked_at_utc: 2026-10-28 04:50:15
+component_file: whisperguard_component_v2_2.py
+component_sha256: c846f4107a9dd810f502f07ef33714e1c077b6de0f266bb6375bb68c7a877f3b
