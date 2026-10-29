@@ -107,3 +107,8 @@ tetapi set tersebut sudah dipakai selama pengembangan sehingga bukan ukuran gene
 * Sampel uji kecil dan belum divalidasi pada dataset serangan skala besar atau registry MCP sungguhan.
 * Deteksi belum menjamin menangkap semua serangan; hasil MEDIUM dan flag `needs_human_review` memerlukan tinjauan manusia.
 * Auto-remediation (memblokir tool otomatis) sengaja tidak diimplementasikan.
+
+## Lisensi
+
+Dirilis di bawah [Apache License 2.0](LICENSE).
+Copyright 2026 Mukhammad Nuruddin Alhaffaf dan Salsabilla Fadillah Safina.
